@@ -1,13 +1,18 @@
 const express = require('express');
+const session = require('express-session');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-const api = require('./app/router/user');
 const PORT = process.env.PORT || 8808;
 app.use(cors());
 app.use(express.json());
+app.use(session({resave: true, saveUninitialized: true, secret: '73kj%7Jk&k@#sdjf', cookie: { maxAge: 6000}}));
 
-app.use('/api', api);
+const userRoutes = require('./app/router/user');
+const sessionRoutes = require('./app/router/session');
+
+app.use('/api/user', userRoutes);
+app.use('/api/session', sessionRoutes);
 
 mongoose.connect('mongodb://localhost/nodeApiTest', {
     useNewUrlParser: true,
